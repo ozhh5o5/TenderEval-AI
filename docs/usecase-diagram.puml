@@ -7,9 +7,10 @@ skinparam handwritten false
 skinparam defaultFontName "Segoe UI"
 skinparam defaultFontSize 14
 
-' Force extreme compactness
+' Force extreme compactness & horizontal layout
+left to right direction
 skinparam nodesep 25
-skinparam ranksep 30
+skinparam ranksep 40
 
 ' ── Golden Theme ──
 skinparam backgroundColor #FFF8E7
