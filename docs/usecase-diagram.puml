@@ -1,0 +1,175 @@
+@startuml TenderEval_AI_UseCaseDiagram
+
+' ── Page & Theme Settings (16:9 PPT) ──
+skinparam pageMargin 10
+skinparam shadowing true
+skinparam handwritten false
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 13
+
+' ── Golden Theme ──
+skinparam backgroundColor #FFF8E7
+skinparam usecaseBackgroundColor #FFFAED
+skinparam usecaseBorderColor #C8A951
+skinparam usecaseFontColor #3D2B00
+skinparam usecaseFontSize 12
+skinparam usecaseStereotypeFontSize 10
+
+skinparam actorBorderColor #8B6914
+skinparam actorBackgroundColor #FFE9A0
+skinparam actorFontColor #3D2B00
+skinparam actorFontSize 13
+skinparam actorFontStyle bold
+
+skinparam rectangleBorderColor #C8A951
+skinparam rectangleBackgroundColor #FFFDF5
+skinparam rectangleFontColor #5C4300
+skinparam rectangleFontSize 16
+skinparam rectangleFontStyle bold
+
+skinparam arrowColor #8B6914
+skinparam arrowFontColor #5C4300
+skinparam arrowFontSize 10
+
+skinparam noteBorderColor #C8A951
+skinparam noteBackgroundColor #FFF5D6
+skinparam noteFontColor #3D2B00
+skinparam noteFontSize 10
+
+' ── Title ──
+title <size:22><b><color:#5C4300>TenderEval AI — Use Case Diagram</color></b></size>\n<size:13><color:#8B6914>Theme 3: AI-Based Tender Evaluation & Eligibility Analysis for Government Procurement (CRPF)</color></size>
+
+' ── Actors ──
+actor "Procurement\nOfficer" as PO #FFE9A0
+actor "Evaluation\nCommittee" as EC #FFE9A0
+actor "Audit / CVC\nInvestigator" as AU #FFE9A0
+actor "Bidder /\nMSME Vendor" as BD #FFE9A0
+
+actor "Claude AI\n(Sonnet)" as AI <<System>> #FFDEAD
+actor "Docling /\nPaddleOCR" as OCR <<System>> #FFDEAD
+actor "Govt Databases\n(GST, GeM, MSME)" as GOV <<System>> #FFDEAD
+actor "TGNN Forensic\nEngine" as TGNN <<System>> #FFDEAD
+
+' ── System Boundary ──
+rectangle "TenderEval AI Platform" as SYS {
+
+  ' ── Feature 1: Criterion Extraction ──
+  package "Tender Processing" as PKG1 #FFF5D6 {
+    usecase "Upload Tender\nDocument" as UC1
+    usecase "Auto-Extract\nEligibility Criteria" as UC2
+    usecase "Review & Edit\nExtracted Criteria" as UC3
+  }
+
+  ' ── Feature 2: Document Pipeline ──
+  package "Document Intelligence" as PKG2 #FFF5D6 {
+    usecase "Upload Bidder\nDocuments" as UC4
+    usecase "Multi-Format\nDocument Parsing" as UC5
+    usecase "OCR / VLM\nText Extraction" as UC6
+  }
+
+  ' ── Feature 3: Per-Criterion Verdict ──
+  package "AI Evaluation" as PKG3 #FFF5D6 {
+    usecase "Run Per-Criterion\nEvaluation" as UC7
+    usecase "Generate Verdict\nwith Confidence" as UC8
+    usecase "Link Verdict to\nSource Page" as UC9
+  }
+
+  ' ── Feature 4: Bid-Rigging Detection ──
+  package "Forensic Analysis" as PKG4 #FFF5D6 {
+    usecase "Build Entity\nKnowledge Graph" as UC10
+    usecase "Detect Bid-Rigging\nPatterns" as UC11
+    usecase "Generate Forensic\nRisk Score" as UC12
+  }
+
+  ' ── Feature 5: Statutory Verification ──
+  package "Statutory Cross-Check" as PKG5 #FFF5D6 {
+    usecase "Verify GST\nRegistration" as UC13
+    usecase "Check MSME /\nUdyam Status" as UC14
+    usecase "Check GeM\nBlacklist" as UC15
+    usecase "Flag\nDiscrepancies" as UC16
+  }
+
+  ' ── Feature 6: Audit & Override ──
+  package "Audit & Override" as PKG6 #FFF5D6 {
+    usecase "View Evaluation\nMatrix" as UC17
+    usecase "Override AI\nVerdict" as UC18
+    usecase "Log Override with\nOfficer Identity" as UC19
+    usecase "Export Audit\nReport" as UC20
+  }
+}
+
+' ── Actor → Use Case Relationships ──
+
+' Procurement Officer
+PO --> UC1
+PO --> UC3
+PO --> UC4
+PO --> UC7
+PO --> UC17
+
+' Evaluation Committee
+EC --> UC17
+EC --> UC18
+EC --> UC20
+
+' Audit Investigator
+AU --> UC12
+AU --> UC16
+AU --> UC19
+AU --> UC20
+
+' Bidder (passive — documents are submitted)
+BD --> UC4
+
+' ── System Actor Relationships ──
+
+AI --> UC2 : <<extracts>>
+AI --> UC8 : <<evaluates>>
+OCR --> UC5 : <<parses>>
+OCR --> UC6 : <<extracts text>>
+GOV --> UC13 : <<verifies>>
+GOV --> UC14 : <<verifies>>
+GOV --> UC15 : <<checks>>
+TGNN --> UC10 : <<builds graph>>
+TGNN --> UC11 : <<detects>>
+TGNN --> UC12 : <<scores>>
+
+' ── Include / Extend Relationships ──
+
+UC1 ..> UC2 : <<include>>
+UC2 ..> UC3 : <<include>>
+UC4 ..> UC5 : <<include>>
+UC5 ..> UC6 : <<extend>>
+UC7 ..> UC8 : <<include>>
+UC8 ..> UC9 : <<include>>
+UC13 ..> UC16 : <<extend>>
+UC15 ..> UC16 : <<extend>>
+UC18 ..> UC19 : <<include>>
+
+' ── Notes ──
+note right of PKG1
+  <b>Feature 1</b>
+  Zero-labeling AI extraction
+  No manual annotation needed
+end note
+
+note right of PKG4
+  <b>Feature 4</b>
+  Temporal GNN detects
+  shell companies & cartels
+end note
+
+note bottom of SYS
+  <size:11><color:#8B6914>Every verdict is explainable · No silent disqualification · Full audit trail · Anti-cartel forensics built-in</color></size>
+end note
+
+' ── Legend ──
+legend right
+  |<#FFE9A0> <b>Human Actor</b> |
+  |<#FFDEAD> <b>System Actor</b> |
+  |<#FFF5D6> <b>Feature Package</b> |
+  | <color:#8B6914>——></color>  Association |
+  | <color:#8B6914>..></color>  Include / Extend |
+endlegend
+
+@enduml
