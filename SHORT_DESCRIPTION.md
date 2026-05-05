@@ -1,0 +1,7 @@
+# TenderEval AI — Short Description
+
+TenderEval AI is an AI-powered forensic tender evaluation platform built for Indian government procurement. It ingests tender documents, automatically extracts every eligibility criterion without manual pre-labeling, then evaluates each bidder's submission against every criterion — producing explainable, per-criterion verdicts (Eligible / Not Eligible / Needs Review) where every verdict hyperlinks to the exact page and section in the source document. No bidder is silently disqualified; every decision ships with verbatim evidence and a confidence score.
+
+Beyond document evaluation, TenderEval deploys a Temporal Graph Neural Network that continuously maps bidding entity relationships — directors, shared addresses, IP metadata, pricing patterns — to detect shell company clusters, round-robin bidding rings, and coordinated price inflation. The platform also cross-references bidder claims against live government databases (GST, MSME Udyam, GeM blacklists, EPFO) and maintains a complete audit trail of every officer override with identity, justification, and timestamp.
+
+Built for the PanIIT AI for Bharat Hackathon (Theme 3: CRPF), TenderEval combines a React/Vite frontend with a FastAPI/Claude API backend, supporting typed PDFs, scanned documents, photographs, and handwritten submissions through a multi-format OCR pipeline (Docling + PaddleOCR + Vision-Language Models). The frontend runs standalone with embedded demo data — no backend setup required for evaluation.
