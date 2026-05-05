@@ -5,20 +5,18 @@ skinparam pageMargin 10
 skinparam shadowing true
 skinparam handwritten false
 skinparam defaultFontName "Segoe UI"
-skinparam defaultFontSize 13
+skinparam defaultFontSize 14
 
-' Make it narrower horizontally
-left to right direction
-skinparam nodesep 40
-skinparam ranksep 60
+' Force extreme compactness
+skinparam nodesep 25
+skinparam ranksep 30
 
 ' ── Golden Theme ──
 skinparam backgroundColor #FFF8E7
 skinparam usecaseBackgroundColor #FFFAED
 skinparam usecaseBorderColor #C8A951
 skinparam usecaseFontColor #3D2B00
-skinparam usecaseFontSize 12
-skinparam usecaseStereotypeFontSize 10
+skinparam usecaseFontSize 13
 
 skinparam actorBorderColor #8B6914
 skinparam actorBackgroundColor #FFE9A0
@@ -34,109 +32,51 @@ skinparam rectangleFontStyle bold
 
 skinparam arrowColor #8B6914
 skinparam arrowFontColor #5C4300
-skinparam arrowFontSize 10
-
-skinparam noteBorderColor #C8A951
-skinparam noteBackgroundColor #FFF5D6
-skinparam noteFontColor #3D2B00
-skinparam noteFontSize 10
+skinparam arrowFontSize 11
 
 ' ── Title ──
-title <size:22><b><color:#5C4300>TenderEval AI — Use Case Diagram</color></b></size>\n<size:13><color:#8B6914>Theme 3: AI-Based Tender Evaluation & Eligibility Analysis</color></size>
+title <size:24><b><color:#5C4300>TenderEval AI — Use Case Diagram</color></b></size>
 
 ' ── System Boundary ──
 rectangle "TenderEval AI Platform" as SYS {
-
-  ' Stack packages vertically to reduce width
-  package "Tender Processing" as PKG1 #FFF5D6 {
-    usecase "Upload Tender" as UC1
-    usecase "Auto-Extract\nCriteria" as UC2
-  }
-
-  package "Document Intelligence" as PKG2 #FFF5D6 {
-    usecase "Upload Bidder Docs" as UC4
-    usecase "Multi-Format Parsing" as UC5
-    usecase "OCR / VLM Text Extr." as UC6
-  }
-
-  package "AI Evaluation" as PKG3 #FFF5D6 {
-    usecase "Per-Criterion Eval" as UC7
-    usecase "Generate Verdict" as UC8
-    usecase "Link Source Page" as UC9
-  }
-
-  package "Forensic Analysis" as PKG4 #FFF5D6 {
-    usecase "Build Knowledge Graph" as UC10
-    usecase "Detect Bid-Rigging" as UC11
-    usecase "Generate Risk Score" as UC12
-  }
-
-  package "Statutory Check" as PKG5 #FFF5D6 {
-    usecase "Verify GST/MSME" as UC13
-    usecase "Check GeM Blacklist" as UC15
-    usecase "Flag Discrepancies" as UC16
-  }
-
-  package "Audit & Override" as PKG6 #FFF5D6 {
-    usecase "View Eval Matrix" as UC17
-    usecase "Override Verdict" as UC18
-    usecase "Export Audit Report" as UC20
-  }
+  usecase "1. Extract Tender Criteria" as UC1
+  usecase "2. Parse Bidder Documents" as UC2
+  usecase "3. Evaluate & Anchor Evidence" as UC3
+  usecase "4. Detect Bid-Rigging (TGNN)" as UC4
+  usecase "5. Verify Govt Statutory Data" as UC5
+  usecase "6. Audit & Override Verdicts" as UC6
 }
 
-' ── Actors (Grouped on left/right to save space) ──
+' ── Human Actors (Left) ──
 actor "Procurement\nOfficer" as PO #FFE9A0
-actor "Eval\nCommittee" as EC #FFE9A0
-actor "Audit\nInvestigator" as AU #FFE9A0
+actor "Evaluation\nCommittee" as EC #FFE9A0
 actor "Bidder" as BD #FFE9A0
 
-actor "Claude AI" as AI <<System>> #FFDEAD
-actor "Docling/\nPaddleOCR" as OCR <<System>> #FFDEAD
-actor "Govt DBs" as GOV <<System>> #FFDEAD
-actor "TGNN\nEngine" as TGNN <<System>> #FFDEAD
+' ── System Actors (Right) ──
+actor "AI & OCR\nEngine" as AI <<System>> #FFDEAD
+actor "External\nGovt DBs" as GOV <<System>> #FFDEAD
 
-' ── Actor → Use Case Relationships ──
-
+' ── Relationships ──
 PO --> UC1
-PO --> UC7
-PO --> UC17
+PO --> UC3
+EC --> UC6
+BD --> UC2
 
-EC --> UC17
-EC --> UC18
+UC1 <-- AI
+UC2 <-- AI
+UC3 <-- AI
+UC4 <-- AI
 
-AU --> UC12
-AU --> UC16
-AU --> UC20
+UC5 <-- GOV
 
-BD --> UC4
-
-' ── System Actor Relationships ──
-
-AI --> UC2
-AI --> UC8
-OCR --> UC5
-OCR --> UC6
-GOV --> UC13
-GOV --> UC15
-TGNN --> UC10
-TGNN --> UC11
-
-' ── Include / Extend Relationships ──
-
-UC1 ..> UC2 : <<include>>
-UC4 ..> UC5 : <<include>>
-UC5 ..> UC6 : <<extend>>
-UC7 ..> UC8 : <<include>>
-UC8 ..> UC9 : <<include>>
-UC13 ..> UC16 : <<extend>>
-UC15 ..> UC16 : <<extend>>
-UC10 ..> UC11 : <<extend>>
-UC11 ..> UC12 : <<include>>
+' Connections between Use Cases to show flow
+UC1 .> UC3 : <<feeds>>
+UC2 .> UC3 : <<feeds>>
+UC3 .> UC6 : <<audited by>>
 
 ' ── Legend ──
 legend bottom right
-  |<#FFE9A0> <b>Human</b> |
-  |<#FFDEAD> <b>System</b> |
+  |<#FFE9A0> <b>Human Actor</b> | <#FFDEAD> <b>System Actor</b> |
 endlegend
 
 @enduml
